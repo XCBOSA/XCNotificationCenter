@@ -35,12 +35,11 @@ public class XCNotificationCenter {
         }
         let receiver = Receiver(receiver: method, recordedWeakObject: weakObj, forNotificationNamed: name)
         pthread_rwlock_wrlock(&self.locker)
-        var t: [Receiver]! = receivers[name]
-        if t == nil {
-            t = [Receiver]()
-            receivers[name] = t
+        if receivers[name] != nil {
+            receivers[name]?.append(receiver)
+        } else {
+            receivers[name] = [receiver]
         }
-        t.append(receiver)
         pthread_rwlock_unlock(&self.locker)
     }
     
